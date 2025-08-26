@@ -1,0 +1,183 @@
+-- 设置页面标题
+activity.setTitle('用户协议')
+
+-- 导入必要的类
+import "android.graphics.drawable.GradientDrawable"
+import "android.view.animation.AlphaAnimation"
+import "android.view.animation.Animation"
+
+-- 获取屏幕尺寸
+local screenWidth = activity.Width
+local screenHeight = activity.Height
+
+-- 创建主布局
+local layout = LinearLayout(activity)
+layout.setOrientation(LinearLayout.VERTICAL)
+layout.setGravity(17)  -- 居中
+layout.setLayoutParams(LinearLayout.LayoutParams(-1, -1))
+layout.setPadding(40, 40, 40, 40)
+layout.setBackgroundColor(0x88000000)  -- 半透明黑色背景
+
+-- 创建协议弹窗容器
+local dialogLayout = LinearLayout(activity)
+dialogLayout.setOrientation(LinearLayout.VERTICAL)
+local dialogParams = LinearLayout.LayoutParams(
+    screenWidth * 0.9, 
+    LinearLayout.LayoutParams.WRAP_CONTENT
+)
+dialogParams.gravity = 17  -- 居中
+dialogLayout.setLayoutParams(dialogParams)
+dialogLayout.setPadding(30, 30, 30, 30)
+
+-- 创建圆角背景
+local bg = GradientDrawable()
+bg.setColor(0xFFFFFFFF)  -- 白色背景
+bg.setCornerRadius(20)   -- 圆角半径
+dialogLayout.setBackgroundDrawable(bg)
+
+-- 创建标题
+local title = TextView(activity)
+title.setText("用户协议与隐私政策")
+title.setTextSize(20)  -- 标题文字大小
+title.setTextColor(0xFF333333)  -- 标题颜色
+title.setTypeface(nil, 1)  -- 粗体
+title.setGravity(17)  -- 居中
+title.setPadding(0, 0, 0, 20)  -- 底部间距
+local titleParams = LinearLayout.LayoutParams(
+    LinearLayout.LayoutParams.MATCH_PARENT, 
+    LinearLayout.LayoutParams.WRAP_CONTENT
+)
+title.setLayoutParams(titleParams)
+
+-- 创建协议内容
+local content = TextView(activity)
+content.setText("欢迎使用本应用！请您仔细阅读以下协议内容：\n\n1. 服务条款\n我们为您提供...（此处省略详细协议内容）\n\n2. 隐私政策\n我们高度重视您的隐私...（此处省略隐私政策内容）\n\n3. 数据使用\n我们会收集必要的信息以提供更好的服务...\n\n4. 用户责任\n您需要对自己的行为负责...\n\n请您在使用前仔细阅读并同意以上条款。")
+content.setTextSize(16)  -- 内容文字大小
+content.setTextColor(0xFF666666)  -- 内容颜色
+content.setLineSpacing(0, 1.2)  -- 行间距
+
+-- 创建滚动容器
+local scrollView = ScrollView(activity)
+local scrollParams = LinearLayout.LayoutParams(
+    LinearLayout.LayoutParams.MATCH_PARENT, 
+    screenHeight * 0.4  -- 限制高度
+)
+scrollView.setLayoutParams(scrollParams)
+scrollView.addView(content)
+
+-- 创建复选框
+local checkLayout = LinearLayout(activity)
+checkLayout.setOrientation(LinearLayout.HORIZONTAL)
+checkLayout.setGravity(16)  -- 左对齐|居中垂直
+local checkParams = LinearLayout.LayoutParams(
+    LinearLayout.LayoutParams.MATCH_PARENT, 
+    LinearLayout.LayoutParams.WRAP_CONTENT
+)
+checkParams.setMargins(0, 20, 0, 20)  -- 上下间距
+checkLayout.setLayoutParams(checkParams)
+
+local checkBox = CheckBox(activity)
+checkBox.setText("我已阅读并同意用户协议和隐私政策")
+checkBox.setTextSize(16)
+checkBox.setTextColor(0xFF333333)
+checkLayout.addView(checkBox)
+
+-- 创建按钮容器
+local buttonLayout = LinearLayout(activity)
+buttonLayout.setOrientation(LinearLayout.HORIZONTAL)
+buttonLayout.setGravity(17)  -- 居中
+local buttonParams = LinearLayout.LayoutParams(
+    LinearLayout.LayoutParams.MATCH_PARENT, 
+    LinearLayout.LayoutParams.WRAP_CONTENT
+)
+buttonLayout.setLayoutParams(buttonParams)
+
+-- 创建拒绝按钮
+local rejectBtn = Button(activity)
+rejectBtn.setText("拒绝并退出")
+rejectBtn.setTextSize(16)
+rejectBtn.setTextColor(0xFF666666)
+local rejectParams = LinearLayout.LayoutParams(
+    0, 
+    LinearLayout.LayoutParams.WRAP_CONTENT, 
+    1.0  -- 权重
+)
+rejectParams.setMargins(0, 0, 10, 0)  -- 右边距
+rejectBtn.setLayoutParams(rejectParams)
+
+-- 设置拒绝按钮样式
+local rejectBg = GradientDrawable()
+rejectBg.setColor(0xFFEEEEEE)  -- 浅灰色背景
+rejectBg.setCornerRadius(10)   -- 圆角半径
+rejectBtn.setBackgroundDrawable(rejectBg)
+
+-- 创建同意按钮
+local acceptBtn = Button(activity)
+acceptBtn.setText("同意并继续")
+acceptBtn.setTextSize(16)
+acceptBtn.setTextColor(0xFFFFFFFF)
+local acceptParams = LinearLayout.LayoutParams(
+    0, 
+    LinearLayout.LayoutParams.WRAP_CONTENT, 
+    1.0  -- 权重
+)
+acceptParams.setMargins(10, 0, 0, 0)  -- 左边距
+acceptBtn.setLayoutParams(acceptParams)
+
+-- 设置同意按钮样式
+local acceptBg = GradientDrawable()
+acceptBg.setColor(0xFF2196F3)  -- 蓝色背景
+acceptBg.setCornerRadius(10)   -- 圆角半径
+acceptBtn.setBackgroundDrawable(acceptBg)
+
+-- 添加按钮到按钮容器
+buttonLayout.addView(rejectBtn)
+buttonLayout.addView(acceptBtn)
+
+-- 添加所有视图到弹窗容器
+dialogLayout.addView(title)
+dialogLayout.addView(scrollView)
+dialogLayout.addView(checkLayout)
+dialogLayout.addView(buttonLayout)
+
+-- 添加弹窗到主布局
+layout.addView(dialogLayout)
+
+-- 设置主布局为内容视图
+activity.setContentView(layout)
+
+-- 添加淡入动画
+local anim = AlphaAnimation(0.0, 1.0)
+anim.setDuration(500)
+layout.startAnimation(anim)
+
+-- 按钮点击事件
+rejectBtn.onClick = function()
+    -- 退出应用
+    activity.finish()
+end
+
+acceptBtn.onClick = function()
+    if checkBox.isChecked() then
+        -- 保存用户同意状态
+        local prefs = activity.getSharedPreferences("user_prefs", 0)
+        local editor = prefs.edit()
+        editor.putBoolean("agreed", true)
+        editor.apply()
+        
+        -- 淡出动画
+        local animOut = AlphaAnimation(1.0, 0.0)
+        animOut.setDuration(300)
+        animOut.setAnimationListener({
+            onAnimationEnd = function()
+                -- 关闭弹窗，继续应用
+                activity.finish()
+            end
+        })
+        layout.startAnimation(animOut)
+    else
+        -- 提示用户需要同意
+local toast = Toast.makeText(activity, "请先阅读并同意用户协议", Toast.LENGTH_SHORT)
+        toast.show()
+    end
+end
